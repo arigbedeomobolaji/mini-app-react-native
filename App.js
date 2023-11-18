@@ -1,11 +1,10 @@
-import { useEffect, useCallback, useState } from "react";
+import { useCallback, useState } from "react";
 import { ImageBackground, SafeAreaView, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { colors } from "./utils";
 import StartGameScreen from "./screens/StartGameScreen";
-import PrimaryButton from "./components/ui/PrimaryButton";
 import GameScreen from "./screens/GameScreen";
 import GameOverScreen from "./screens/GameOverScreen";
 
@@ -15,6 +14,7 @@ SplashScreen.preventAutoHideAsync();
 export default function App() {
 	const [userGuess, setUserGuess] = useState();
 	const [isGameOver, setIsGameOver] = useState(true);
+	const [rounds, setRounds] = useState(null);
 	const [fontsLoaded] = useFonts({
 		"open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
 		"open-sans-light": require("./assets/fonts/OpenSans-Light.ttf"),
@@ -38,8 +38,14 @@ export default function App() {
 		setIsGameOver(false);
 	}
 
-	function handleGameIsOver() {
+	function handleGameIsOver(rounds) {
+		setRounds(rounds);
 		setIsGameOver(true);
+	}
+
+	function handleRestartGame() {
+		setIsGameOver(false);
+		setUserGuess(null);
 	}
 
 	let screen = <StartGameScreen sendUserGuess={handleUserGuess} />;
@@ -54,7 +60,13 @@ export default function App() {
 	}
 
 	if (userGuess && isGameOver) {
-		screen = <GameOverScreen />;
+		screen = (
+			<GameOverScreen
+				userGuess={userGuess}
+				rounds={rounds}
+				onRestartGame={handleRestartGame}
+			/>
+		);
 	}
 
 	return (

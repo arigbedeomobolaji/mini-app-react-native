@@ -18,7 +18,6 @@ export default function GameScreen({ userGuess, handleGameIsOver }) {
 	function generateRndNumber(direction) {
 		if (currentGuess === userGuess) {
 			setCurrentGuess(currentGuess);
-			// handleGameIsOver();
 			return;
 		}
 		if (
@@ -35,9 +34,9 @@ export default function GameScreen({ userGuess, handleGameIsOver }) {
 		let newGuess;
 		if (direction === "lower") {
 			max = currentGuess + 1;
-			newGuess = generateRangedRandomNumber(min, max, max);
+			newGuess = generateRangedRandomNumber(min, max, max - 1);
 		} else {
-			min = currentGuess;
+			min = currentGuess + 1;
 			newGuess = generateRangedRandomNumber(min, max, min);
 		}
 		setCurrentGuess(newGuess);
@@ -52,13 +51,19 @@ export default function GameScreen({ userGuess, handleGameIsOver }) {
 
 	useEffect(() => {
 		if (currentGuess === userGuess) {
-			handleGameIsOver();
+			handleGameIsOver(guessList.length);
 		}
 	}, [currentGuess, userGuess]);
 
 	function generateRangedRandomNumber(min, max, exclude) {
-		const randNumber = Math.floor(Math.random() * (max - min)) + min;
-		if (randNumber === exclude) {
+		let randNumber = Math.floor(Math.random() * (max - min)) + min;
+		if (max === min) {
+			return randNumber;
+		}
+		if (
+			randNumber === exclude &&
+			(min !== randNumber || max !== randNumber)
+		) {
 			randNumber = generateRangedRandomNumber(min, max, exclude);
 		}
 		return randNumber;
@@ -95,7 +100,6 @@ export default function GameScreen({ userGuess, handleGameIsOver }) {
 			<FlatList
 				data={guessList}
 				renderItem={({ item, index }) => {
-					console.log(item);
 					return (
 						<ListItem
 							attemptNumber={guessList.length - index}
@@ -105,12 +109,6 @@ export default function GameScreen({ userGuess, handleGameIsOver }) {
 				}}
 				keyExtractor={(item) => item + Math.random()}
 			/>
-			{/* {guessList.map((guessItem, index) => (
-				<ListItem
-					attemptNumber={guessList.length - index}
-					guess={guessItem}
-				/>
-			))} */}
 		</View>
 	);
 }
