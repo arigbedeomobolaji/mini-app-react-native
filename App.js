@@ -7,17 +7,20 @@ import { colors } from "./utils";
 import StartGameScreen from "./screens/StartGameScreen";
 import PrimaryButton from "./components/ui/PrimaryButton";
 import GameScreen from "./screens/GameScreen";
+import GameOverScreen from "./screens/GameOverScreen";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
 	const [userGuess, setUserGuess] = useState();
+	const [isGameOver, setIsGameOver] = useState(true);
 	const [fontsLoaded] = useFonts({
 		"open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
 		"open-sans-light": require("./assets/fonts/OpenSans-Light.ttf"),
-		"open-sans-medium": require("./assets/fonts/OpenSans-Medium.ttf"),
-		"open-sans-bold": require("./assets/fonts/OpenSans-SemiBold.ttf"),
+		"open-sans-medium": require("./assets/fonts/OpenSans-SemiBold.ttf"),
+		"open-sans-bold": require("./assets/fonts/OpenSans-Bold.ttf"),
+		"open-sans-extrabold": require("./assets/fonts/OpenSans-ExtraBold.ttf"),
 	});
 
 	const onLayoutRootView = useCallback(() => {
@@ -32,13 +35,28 @@ export default function App() {
 
 	function handleUserGuess(userInput) {
 		setUserGuess(userInput);
+		setIsGameOver(false);
+	}
+
+	function handleGameIsOver() {
+		setIsGameOver(true);
 	}
 
 	let screen = <StartGameScreen sendUserGuess={handleUserGuess} />;
 
-	if (userGuess) {
-		screen = <GameScreen />;
+	if (userGuess && !isGameOver) {
+		screen = (
+			<GameScreen
+				userGuess={userGuess}
+				handleGameIsOver={handleGameIsOver}
+			/>
+		);
 	}
+
+	if (userGuess && isGameOver) {
+		screen = <GameOverScreen />;
+	}
+
 	return (
 		<LinearGradient
 			colors={[colors.primary800, colors.accent500]}

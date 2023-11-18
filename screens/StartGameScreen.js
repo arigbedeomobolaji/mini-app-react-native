@@ -3,6 +3,7 @@ import { StyleSheet, View, Text, TextInput, Alert } from "react-native";
 import Title from "../components/ui/Title";
 import { colors } from "../utils";
 import PrimaryButton from "../components/ui/PrimaryButton";
+import Card from "../components/ui/Card";
 
 export default function StartGameScreen({ sendUserGuess }) {
 	const [enteredNumber, setEnteredNumber] = useState("");
@@ -32,7 +33,8 @@ export default function StartGameScreen({ sendUserGuess }) {
 	return (
 		<View style={styles.container}>
 			<Title>Guess My Number</Title>
-			<View style={styles.inputContainer}>
+
+			<Card>
 				<View style={styles.inputTextLabelContainer}>
 					<Text style={styles.inputTextLabel}>Enter a Number</Text>
 				</View>
@@ -54,7 +56,7 @@ export default function StartGameScreen({ sendUserGuess }) {
 						Confirm
 					</PrimaryButton>
 				</View>
-			</View>
+			</Card>
 		</View>
 	);
 }
@@ -62,13 +64,6 @@ export default function StartGameScreen({ sendUserGuess }) {
 const styles = StyleSheet.create({
 	container: {
 		alignItems: "center",
-	},
-	inputContainer: {
-		backgroundColor: colors.primary800,
-		borderRadius: 10,
-		marginTop: 30,
-		padding: 20,
-		paddingHorizontal: 30,
 	},
 	inputTextLabelContainer: {
 		alignItems: "center",

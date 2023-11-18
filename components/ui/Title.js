@@ -4,7 +4,9 @@ import { colors } from "../../utils";
 export default function Title({ children }) {
 	return (
 		<View style={styles.titleContainer}>
-			<Text style={styles.title}>{children}</Text>
+			<View style={styles.innerTitleContainer}>
+				<Text style={styles.title}>{children}</Text>
+			</View>
 		</View>
 	);
 }
@@ -12,14 +14,19 @@ export default function Title({ children }) {
 const styles = StyleSheet.create({
 	titleContainer: {
 		marginTop: 80,
+		alignItems: "center",
+	},
+	innerTitleContainer: {
+		padding: 8,
+		paddingHorizontal: 50,
 		borderWidth: 4,
 		borderColor: "#fff",
-		padding: 8,
 	},
 	title: {
 		color: "#fff",
-		fontFamily: "open-sans-bold",
+		fontFamily: "open-sans-extrabold",
 		fontSize: 24,
 		padding: 8,
+		textAlign: "center",
 	},
 });
