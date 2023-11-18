@@ -9,7 +9,7 @@ export default function PrimaryButton({ children, onPress }) {
 				android_ripple={true}
 				onPress={onPress}
 			>
-				<View>
+				<View style={styles.innerButtonContainer}>
 					<Text style={styles.button}>{children}</Text>
 				</View>
 			</Pressable>
@@ -19,10 +19,12 @@ export default function PrimaryButton({ children, onPress }) {
 
 const styles = StyleSheet.create({
 	buttonContainer: {
+		marginTop: 25,
+	},
+	innerButtonContainer: {
 		borderRadius: 20,
 		padding: 8,
 		margin: 8,
-		marginTop: 25,
 		paddingHorizontal: 30,
 		shadowColor: colors.primary300,
 		shadowOffset: { width: -1, height: 1.5 },
@@ -31,14 +33,15 @@ const styles = StyleSheet.create({
 		elevation: 20,
 		backgroundColor: colors.primary500,
 	},
+	pressedStyle: {
+		opacity: 0.3,
+	},
 	button: {
 		color: "#fff",
 		textAlign: "center",
 		fontFamily: "open-sans-bold",
-		fontWeight: 600,
+		fontSize: 16,
 		paddingHorizontal: 10,
-	},
-	pressedStyle: {
-		opacity: 0.1,
+		paddingVertical: 3,
 	},
 });

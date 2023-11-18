@@ -1,9 +1,34 @@
-import { StyleSheet, View, Text, TextInput } from "react-native";
+import { useState } from "react";
+import { StyleSheet, View, Text, TextInput, Alert } from "react-native";
 import Title from "../components/ui/Title";
 import { colors } from "../utils";
 import PrimaryButton from "../components/ui/PrimaryButton";
 
-export default function StartGameScreen() {
+export default function StartGameScreen({ sendUserGuess }) {
+	const [enteredNumber, setEnteredNumber] = useState("");
+	function handleTextInputChange(value) {
+		if (parseInt(value) < 1) {
+			setEnteredNumber("");
+			Alert.alert("Warning", "Number must be between 1 - 99", [
+				{
+					text: "Okay",
+					onPress: () => setEnteredNumber(""),
+					style: "destructive",
+				},
+			]);
+		} else {
+			setEnteredNumber(value);
+		}
+	}
+	function resetHandler() {
+		setEnteredNumber("");
+	}
+
+	function confirmHandler() {
+		const userGuess = parseInt(enteredNumber);
+		sendUserGuess(userGuess);
+		setEnteredNumber("");
+	}
 	return (
 		<View style={styles.container}>
 			<Title>Guess My Number</Title>
@@ -14,14 +39,20 @@ export default function StartGameScreen() {
 				<View style={styles.textInputContainer}>
 					<TextInput
 						style={styles.textInput}
-						keyboardType="number-pad"
 						maxLength={2}
-						autoFocus={false}
+						autoFocus={true}
+						value={enteredNumber}
+						onChangeText={handleTextInputChange}
+						inputMode="numeric"
+						keyboardAppearance="dark"
+						selectionColor={colors.accent500}
 					></TextInput>
 				</View>
 				<View style={styles.buttonContainer}>
-					<PrimaryButton>Reset</PrimaryButton>
-					<PrimaryButton>Confirm</PrimaryButton>
+					<PrimaryButton onPress={resetHandler}>Reset</PrimaryButton>
+					<PrimaryButton onPress={confirmHandler}>
+						Confirm
+					</PrimaryButton>
 				</View>
 			</View>
 		</View>

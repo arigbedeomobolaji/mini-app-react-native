@@ -1,21 +1,18 @@
-import { useEffect, useCallback } from "react";
-import {
-	ImageBackground,
-	SafeAreaView,
-	StyleSheet,
-	Text,
-	View,
-} from "react-native";
+import { useEffect, useCallback, useState } from "react";
+import { ImageBackground, SafeAreaView, StyleSheet } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { colors } from "./utils";
 import StartGameScreen from "./screens/StartGameScreen";
+import PrimaryButton from "./components/ui/PrimaryButton";
+import GameScreen from "./screens/GameScreen";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
 export default function App() {
+	const [userGuess, setUserGuess] = useState();
 	const [fontsLoaded] = useFonts({
 		"open-sans": require("./assets/fonts/OpenSans-Regular.ttf"),
 		"open-sans-light": require("./assets/fonts/OpenSans-Light.ttf"),
@@ -23,17 +20,7 @@ export default function App() {
 		"open-sans-bold": require("./assets/fonts/OpenSans-SemiBold.ttf"),
 	});
 
-	useEffect(() => {
-		(async () => {
-			try {
-				await SplashScreen.preventAutoHideAsync();
-			} catch {
-				// handle error
-			}
-		})();
-	}, []);
-
-	const onLayout = useCallback(() => {
+	const onLayoutRootView = useCallback(() => {
 		if (fontsLoaded) {
 			SplashScreen.hideAsync();
 		}
@@ -42,12 +29,21 @@ export default function App() {
 	if (!fontsLoaded) {
 		return null;
 	}
+
+	function handleUserGuess(userInput) {
+		setUserGuess(userInput);
+	}
+
+	let screen = <StartGameScreen sendUserGuess={handleUserGuess} />;
+
+	if (userGuess) {
+		screen = <GameScreen />;
+	}
 	return (
 		<LinearGradient
-			// Background Linear Gradient
 			colors={[colors.primary800, colors.accent500]}
 			style={styles.rootScreen}
-			onLayout={onLayout}
+			onLayout={onLayoutRootView}
 		>
 			<ImageBackground
 				source={require("./assets/images/dice.jpg")}
@@ -56,7 +52,7 @@ export default function App() {
 				imageStyle={styles.backgroundImage}
 			>
 				<SafeAreaView style={styles.safeAreaView}>
-					<StartGameScreen />
+					{screen}
 				</SafeAreaView>
 			</ImageBackground>
 		</LinearGradient>
